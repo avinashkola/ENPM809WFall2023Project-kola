@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: black; 
+        color: antiquewhite; 
+    }
+
+    .login-form {
+        width: 350px; 
+        margin: 0; 
+    }
+
+    h2 {
+        margin-bottom: 20px; 
+    }
+</style>
+
+<div style="text-align: center;">
+    <h1 class="jumbotron-heading" style="color: cadetblue;">Household Chores Distributor</h1>
+    <hr class="mt-2 mb-4 border-0">
+</div>
+
+<h2>Login</h2>
+
+<form method="post" class="login-form">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-success login-button" type="submit">Login</button>
+</form>
+<hr class="mt-2 mb-4 border-0">
+<p>Don't have an account? <a href="{% url 'user_management:signup' %}">Register</a></p>
+<p>Forgot your password? <a href="{% url 'user_management:password_reset' %}">Click to Reset</a></p>
+<hr class="mt-2 mb-2 border-0">
+{% endblock %}
+
+

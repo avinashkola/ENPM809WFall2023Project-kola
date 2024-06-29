@@ -1,0 +1,120 @@
+﻿{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .grid-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        padding: 20px;
+        border: 2px solid #444;
+        border-radius: 8px;
+        background-color: #111;
+    }
+
+        .grid-item.completed {
+            border-color: darkgreen;
+        }
+
+        .grid-item.uncompleted {
+            border-color: darkred;
+        }
+
+        .grid-item.expired {
+            border-color: #888;
+        }
+
+        .grid-item h3 {
+            border-bottom: 1px dotted #666;
+            margin-bottom: 15px;
+        }
+
+            .grid-item h3::after {
+                content: '';
+                display: block;
+                border-bottom: 1px solid #666;
+                margin-top: 10px;
+            }
+</style>
+
+{% if user.is_authenticated %}
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="mt-2">Welcome, {{ user.username|title }}</h1>
+    <a href="{% url 'user_management:logout' %}" class="btn btn-light" style="color: #333;">Log out</a>
+</div>
+<p>
+    <a href="{% url 'chores:create_chore' %}" class="btn btn-primary my-2" style="background-color: darkblue; border-color: #00008B;">Create a New Chore</a>
+</p>
+<hr class="mt-0 mb-4 border-0">
+<div class="grid-container">
+    {% if chore_list %}
+    {% for chore in chore_list %}
+    <div class="grid-item
+        {% if chore.chore_done_by %}
+            completed
+        {% elif chore.is_expired %}
+            expired
+        {% else %}
+            uncompleted
+        {% endif %}
+        {% if chore.chore_priority == " Urgent" %}
+         urgent
+         {% endif %}
+         ">
+        <h3>{{ chore.chore|title }}</h3>
+        <p>Assigned by <strong>{{ chore.chore_assigner|title }}</strong></p>
+        <p>Assigned to <strong>{{ chore.assign_chore_to|title }}</strong></p>
+        <p>Due Date:  <strong>{{ chore.due_date }}</strong></p>
+        <p>
+            Priority:
+            {% if chore.chore_done_by %}
+            <strong>None</strong>
+            {% else %}
+            <strong>{{ chore.chore_priority }}</strong>
+            {% endif %}
+        </p>
+        {% if chore.chore_done_by %}
+        <p>Completed By <strong>{{ chore.chore_done_by|title }}</strong></p>
+        <button class="btn btn-success my-2" disabled>Completed</button>
+        {% elif chore.is_expired %}
+        <p>Status: <strong>Expired</strong></p>
+        <button class="btn btn-secondary my-2" disabled>Expired</button>
+        {% else %}
+        <p>Status: <strong>Not Completed</strong></p>
+        <a href="{% url 'chores:complete_chore' chore.id %}" class="btn btn-primary my-2">Mark as Completed</a>
+        {% endif %}
+        {% if chore.chore_assigner == user.username or user.is_superuser %}
+        <a href="{% url 'chores:delete_chore' chore.id %}" class="btn btn-danger my-2">Delete Chore</a>
+        {% else %}
+        <button class="btn btn-secondary my-2" disabled>Delete Chore</button>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% else %}
+<div class="d-flex align-items-center justify-content-center" style="background-color: #000; min-height: 80vh;">
+    <div class="text-center p-4 rounded" style="background-color: #000000e2;">
+        <h1 class="display-5" style="font-size: 40px; color: cadetblue;">Welcome to Household Chores Distributor</h1>
+        <h2 class="h5 mt-4" style="color: antiquewhite;">Please log in to continue</h2>
+        <div class="mt-4">
+            <a href="{% url 'user_management:login' %}" class="btn btn-primary btn-lg my-2" style="background-color: #00008B; border-color: #00008B;">User Login</a>
+        </div>
+        <p class="mt-4" style="color: antiquewhite;">Don't have an account? <a href="{% url 'user_management:signup' %}" class="text-primary">Register</a></p>
+    </div>
+</div>
+
+
+
+{% endif %}
+{% endblock %}

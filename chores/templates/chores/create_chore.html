@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+        padding: 20px;
+    }
+
+    .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #111;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-control {
+        background-color: #222;
+        border: 1px solid #555;
+        color: #fff;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="form-container">
+    <h3 class="text-center">Create a New Chore</h3>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.chore|as_crispy_field }}
+
+        <!-- Update due_date field -->
+        <div class="form-group">
+            <label for="{{ form.due_date.id_for_label }}">Due Date</label>
+            <input type="text" class="form-control" id="{{ form.due_date.id_for_label }}" name="{{ form.due_date.name }}" required />
+        </div>
+
+        {{ form.assign_chore_to|as_crispy_field }}
+        {{ form.send_notification|as_crispy_field }}
+
+        <!-- Include jQuery and datetimepicker libraries -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
+        <!-- Configure the datetimepicker -->
+        <script>
+            $(function () {
+                $("#{{ form.due_date.id_for_label }}").datetimepicker({
+                    format: 'd/m/Y H:i',
+                    minDate: 0,  // Set minimum date to today
+                });
+            });
+        </script>
+
+        <button class="btn btn-success btn-block" type="submit">Submit</button>
+    </form>
+</div>
+<a class="back-link" href="{% url 'chores:index' %}">Back to the main page</a>
+
+{% endblock %}
