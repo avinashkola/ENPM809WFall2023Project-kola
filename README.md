@@ -22,7 +22,7 @@ Welcome to the Household Chores Distributor web application! This project aims t
 This application is designed with security as a top priority, as part of the Secure Coding coursework. 
 Key security measures include:
 
-* Protection against OWASP Top 10 vulnerabilities and CWE identifiers.
+* Protection against OWASP Top 10 vulnerabilities and Priority CWE identifiers.
 
 * Input validation and sanitization to prevent injection attacks
 
